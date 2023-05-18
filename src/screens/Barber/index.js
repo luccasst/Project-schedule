@@ -5,22 +5,36 @@ import Swiper from 'react-native-swiper';
 import Stars from '../../components/Stars';
 import { Svg } from 'react-native-svg';
 import FavoritIcon from '../../assets/coracao.png';
+import BackIcon from '../../assets/seta-esquerda.png';
 import {
     Container,
     Scroller,
-    FakeSwiper,
     PageBody,
     UserInfoArea,
     ServiceArea,
     TestimonialArea,
+    
+    FakeSwiper,
     SwipeDot,
     SwipeDotActive,
     SwipeItem,
     SwipeImage,
+
     UserAvatar,
+    UserAvatarImage,
     UserInfo,
     UserInfoName,
-    UserFavButton
+    UserFavButton,
+    BackButton,
+    LoadingIcon,
+
+    ServicesTitle,
+    ServiceItem,
+    ServiceInfo,
+    ServiceName,
+    ServicePrice,
+    ServiceChooseButton,
+    ServiceChooseBtnText
 } from './styles';
 import Api from '../../Api';
 
@@ -38,16 +52,21 @@ export default () => {
 
     useEffect(() => {
         const getBarberInfo = async () => {
+            setLoading(true);
             let json = await Api.getBarber(userInfo.id);
             if(json.error == '') {
                 setUserInfo(json.data);
             } else {
                 alert("Error: "+json.error);
             }
-            setLoading(false);
-        }
+             setLoading(false);
+    }
         getBarberInfo();
     }, []);
+
+    const handleBackButton = () => {
+        navigation.goBack();
+    }
 
     return (
         <Container>
@@ -72,7 +91,9 @@ export default () => {
                 }
                 <PageBody>
                     <UserInfoArea>
-                        <UserAvatar source={{uri:userInfo.avatar}}/>
+                        <UserAvatar >
+                            <UserAvatarImage source={{uri:userInfo.avatar}}/>
+                        </UserAvatar>
                         <UserInfo>
                             <UserInfoName>{userInfo.name}</UserInfoName>
                             <Stars stars={userInfo.stars} showNumber={true} />
@@ -83,14 +104,38 @@ export default () => {
                             </View>
                         </UserFavButton>
                     </UserInfoArea>
-                    <ServiceArea>
+                
+                    {loading &&
+                        <LoadingIcon size= "large" color="#080707" />
+                    }
 
+                    {userInfo.services &&
+                    <ServiceArea>
+                        <ServicesTitle>Lista de serviços</ServicesTitle>
+
+                        {userInfo.services.map((item, key) => (
+                            <ServiceItem key ={key}>
+                                <ServiceInfo>
+                                    <ServiceName>{item.name}</ServiceName>
+                                    <ServicePrice>R${item.price}</ServicePrice>
+                                </ServiceInfo>
+                                <ServiceChooseButton>
+                                    <ServiceChooseBtnText>Agendar</ServiceChooseBtnText>
+                                </ServiceChooseButton>
+                            </ServiceItem>
+                        ))}
                     </ServiceArea>
+                    }
                     <TestimonialArea>
 
                     </TestimonialArea>
                 </PageBody>
             </Scroller>
+            <BackButton onPress={handleBackButton}>
+                <View>
+                    <Image source={BackIcon} style={{ width: 20, height: 20 }}/>
+                </View>
+            </BackButton>
         </Container>
     )
 }

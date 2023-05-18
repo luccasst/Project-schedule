@@ -12,7 +12,9 @@ import {
     CustomButtonText,
     SignMessageButton,
     SignMessageButtonText,
-    SignMessageButtonTextBold
+    SignMessageButtonTextBold,
+    SignMessageBarberPoint,
+    SignMessageButtonPoint
 } from './styles';
 
 import Api from '../../Api';
@@ -92,6 +94,8 @@ export default () => {
             <SignMessageButtonText>Ainda não possui uma conta?</SignMessageButtonText>
             <SignMessageButtonTextBold>Cadastre-se</SignMessageButtonTextBold>
       </SignMessageButton>
+            <SignMessageBarberPoint>Quer cadastrar seu ponto?</SignMessageBarberPoint>
+            <SignMessageButtonPoint>Cadastre aqui</SignMessageButtonPoint>
         </Container>
     )
 }

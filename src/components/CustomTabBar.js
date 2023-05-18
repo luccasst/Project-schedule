@@ -65,13 +65,13 @@ export default ({ state, navigation }) => {
                 </View>
             </TabItem>
         <TabItem onPress={() =>goTo('Profile')}>
-                    {user.avatar != '' ?
+                   {/*  {user.avatar != '' ?
                     <AvatarIcon source={{uri: user.avatar}} />
-                    :
+                    : */}
                     <View>
                  <Image source={ProfileIcon} style={{ tintColor: state.index===4 ? '#FFF' : '#0d0f0d', width: 24, height: 24 }} />
                 </View>
-                }
+              {/*   } */}
                 
             </TabItem>
         </TabArea>

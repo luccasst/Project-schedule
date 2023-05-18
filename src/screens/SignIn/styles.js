@@ -38,6 +38,18 @@ color: #268596;
 export const SignMessageButtonTextBold = styled.Text`
 font-size: 16px;
 color: #268596;
-font-wight: bold;
+font-weight: bold;
+margin-left: 5px;
+`;
+
+export const SignMessageBarberPoint = styled.Text`
+font-size: 16px;
+color: #268596;
+`;
+
+export const SignMessageButtonPoint = styled.Text`
+font-size: 16px;
+color: #268596;
+font-weight: bold;
 margin-left: 5px;
 `;

@@ -59,7 +59,7 @@ export default ({data}) => {
             <Stars stars={data.stars} showNumber={true}/>
 
             <SeedProfileButton>
-                <SeedProfileButtonText>Ver Perfil</SeedProfileButtonText>
+                <SeedProfileButtonText>Ver Profile</SeedProfileButtonText>
             </SeedProfileButton>
         </InfoArea>
         </Area>
