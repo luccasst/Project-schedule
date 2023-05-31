@@ -74,7 +74,7 @@ export default () => {
       
         try {
             const token = await AsyncStorage.getItem('token');
-          const response = await fetch('http://192.168.0.39:3010/barber?lat=${lat}&lng=${lng}&&address=${address}', {
+          const response = await fetch(`http://192.168.0.39:3010/barber?lat=${lat}&lng=${lng}&&address=${address}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
