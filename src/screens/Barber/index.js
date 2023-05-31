@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
 import Swiper from 'react-native-swiper';
 import Stars from '../../components/Stars';
 import { Svg } from 'react-native-svg';
@@ -46,20 +47,39 @@ export default () => {
         id: route.params.id,
         avatar: route.params.avatar,
         name: route.params.name,
-        stars: route.params.stars
+        stars: route.params.stars,
+        photos: [], // Inicialize as fotos como um array vazio
+        services: [] 
     });
     const [loading, setLoading] = useState(false);
+    const [list, setList] = useState([]);
+
 
     useEffect(() => {
         const getBarberInfo = async () => {
             setLoading(true);
-            let json = await Api.getBarber(userInfo.id);
-            if(json.error == '') {
-                setUserInfo(json.data);
-            } else {
-                alert("Error: "+json.error);
-            }
-             setLoading(false);
+              try {
+        const token = await AsyncStorage.getItem('token');
+                  const response = await fetch(`http://192.168.0.39:3010/barber/${userInfo.id}`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                  });
+                  if (response.ok) {
+                    const data = await response.json();
+                    setList(data);
+                  } else {
+                    console.error('Erro ao buscar barbeiros:', response.status);
+                    // Lógica para tratar o erro, se necessário
+                  }
+                } catch (error) {
+                  console.error('Erro ao buscar barbeiros:', error);
+                  // Lógica para tratar o erro, se necessário
+                  setLoading(false);
+                }
+              
     }
         getBarberInfo();
     }, []);

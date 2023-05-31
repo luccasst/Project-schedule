@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-
 import { UserContext } from '../../context/UserContext';
+import * as Keychain from 'react-native-keychain';
 
 import {
     Container,
@@ -31,31 +31,44 @@ export default () => {
 
   const [emailField, setEmailField] = useState('');
   const [senhalField, setSenhaField] = useState('');
+  const [token, setToken] = useState(null);
 
-  const handleSignClick = async() => {
-      if(emailField!= '' && senhalField !='') {
-          let json = await Api.signIn(emailField, senhalField);
-          if(json.token) {
-            await AsyncStorage.setItem('token', json.token);
-            userDispatch({
-              type: 'setAvatar',
-              payload:{
-                avatar: json.data.avatar
-              }
-            });
-
-            navigation.reset({
-              routes:[{name: 'MainTab'}]
-            });
-
-          } else {
-            alert('E-mail e/ou senha errados!')
-          }
+  const handleSignClick = async () => {
+    if (emailField.trim() === '' || senhalField.trim() === '') {
+      Alert.alert('Preencha todos os campos!');
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://192.168.0.39:3010/login', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: emailField,
+          password: senhalField,
+        }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        await AsyncStorage.setItem('token', data.access_token);
+        navigation.reset({
+          routes:[{name: 'MainTab'}]
+        });
+        
+        console.log(data);
       } else {
-        alert("Preencha os campos!");
+        const errorData = await response.json();
+        Alert.alert('Erro ao fazer login: ' + errorData.message);
       }
-  }
-
+    } catch (error) {
+      Alert.alert('Erro ao conectar-se ao servidor.');
+      console.error(error);
+    } 
+  };
   const handleMessageButtonClick = () => {
       navigation.reset({
         routes: [{name: 'SignUp'}]
